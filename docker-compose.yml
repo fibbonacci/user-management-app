@@ -1,0 +1,46 @@
+version: '3.7'
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
+  mysql:
+    driver: local
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www/app
+    environment:
+      APP_ENV: 'local'
+    ports:
+      - '80:80'
+    volumes:
+      - .:/var/www/app
+      - logs:/var/www/logs
+    networks:
+      - app
+    depends_on:
+      - mysql
+
+  mysql:
+    image: 'mysql:8.0'
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - 'mysql:/var/lib/mysql'
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
