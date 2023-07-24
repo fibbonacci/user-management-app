@@ -10,39 +10,15 @@ use App\Application\Handlers\HttpErrorHandler;
 use App\Domain\User\UserEntity;
 use App\Domain\User\UserNotFoundException;
 use App\Domain\User\UserRepository;
-use App\Infrastructure\Persistence\User\DatabaseUserRepository;
 use DateTimeImmutable;
 use DI\Container;
-use Doctrine\ORM\Exception\NotSupported;
-use Doctrine\ORM\Exception\ORMException;
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Tests\TestCase;
-use Tests\Traits\DatabaseTestTrait;
 
 class ViewUserActionTest extends TestCase
 {
-    use DatabaseTestTrait;
-
-    private UserRepository $userRepository;
-
     /**
-     * @throws NotSupported
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->userRepository = new DatabaseUserRepository($this->getEntityManager());
-    }
-
-    /**
-     * @throws ORMException
      * @throws Exception
      */
     public function testAction()
@@ -54,12 +30,11 @@ class ViewUserActionTest extends TestCase
 
         $user = new UserEntity();
         $user
-            ->setEmail('test@test.com')
+            ->setId(1)
             ->setName('test')
+            ->setEmail('test@test.com')
             ->setNotes('test')
             ->setCreated(new DateTimeImmutable('now'));
-
-        $this->userRepository->save($user);
 
         $userRepositoryProphecy = $this->prophesize(UserRepository::class);
         $userRepositoryProphecy

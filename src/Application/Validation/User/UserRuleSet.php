@@ -17,10 +17,10 @@ use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\StringValue;
 use Yiisoft\Validator\ValidationContext;
 
-final readonly class UserRequest
+class UserRuleSet
 {
     public function __construct(
-        private UserService $userService,
+        private readonly UserService $userService,
         #[Required]
         #[StringValue]
         #[Length(min: 8, max: 64)]
@@ -37,7 +37,7 @@ final readonly class UserRequest
         public ?string $email = null,
         #[Length(max: 1000, skipOnEmpty: true)]
         public ?string $notes = null,
-        private ?UserEntity $userEntity = null,
+        private readonly ?UserEntity $userEntity = null,
     ) {
     }
 

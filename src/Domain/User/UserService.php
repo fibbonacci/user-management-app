@@ -6,9 +6,9 @@ namespace App\Domain\User;
 
 use DateTimeImmutable;
 
-final readonly class UserService
+class UserService
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private readonly UserRepository $userRepository)
     {
     }
 

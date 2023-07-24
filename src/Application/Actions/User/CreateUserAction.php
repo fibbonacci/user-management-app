@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Actions\User;
 
 use App\Application\Actions\ActionPayload;
-use App\Application\Validation\User\UserRequest;
+use App\Application\Validation\User\UserRuleSet;
 use Psr\Http\Message\ResponseInterface as Response;
 use ReflectionException;
 use Yiisoft\Validator\Validator;
@@ -20,7 +20,7 @@ class CreateUserAction extends UserAction
     {
         $body = $this->request->getParsedBody();
 
-        $userRequest = new UserRequest(
+        $userRequest = new UserRuleSet(
             userService: $this->userService,
             name: $body['name'],
             email: $body['email'],

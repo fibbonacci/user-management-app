@@ -22,17 +22,18 @@ class DatabaseUserRepository implements UserRepository
      */
     public function __construct(private readonly EntityManager $entityManager)
     {
+        $this->entityManager->getClassMetadata(UserEntity::class)->setPrimaryTable(['name' => $_ENV['USERS_TABLE']]);
         $this->repository = $this->entityManager->getRepository(UserEntity::class);
     }
 
     public function findAll(): array
     {
-        return $this->repository->findAll();
+        return $this->repository->findBy(['deleted' => null]);
     }
 
     public function findById(int $id): ?UserEntity
     {
-        return $this->repository->find($id);
+        return $this->repository->findOneBy(['id' => $id, 'deleted' => null]);
     }
 
     /**

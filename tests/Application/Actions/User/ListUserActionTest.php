@@ -7,35 +7,13 @@ namespace Tests\Application\Actions\User;
 use App\Application\Actions\ActionPayload;
 use App\Domain\User\UserRepository;
 use App\Domain\User\UserEntity;
-use App\Infrastructure\Persistence\User\DatabaseUserRepository;
 use DateTimeImmutable;
 use DI\Container;
-use Doctrine\ORM\Exception\NotSupported;
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Tests\TestCase;
-use Tests\Traits\DatabaseTestTrait;
 
 class ListUserActionTest extends TestCase
 {
-    use DatabaseTestTrait;
-
-    private UserRepository $userRepository;
-
-    /**
-     * @throws NotSupported
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->userRepository = new DatabaseUserRepository($this->getEntityManager());
-    }
-
     /**
      * @throws Exception
      */
@@ -48,12 +26,11 @@ class ListUserActionTest extends TestCase
 
         $user = new UserEntity();
         $user
-            ->setEmail('test@test.com')
+            ->setId(1)
             ->setName('test')
+            ->setEmail('test@test.com')
             ->setNotes('test')
             ->setCreated(new DateTimeImmutable('now'));
-
-        $this->userRepository->save($user);
 
         $userRepositoryProphecy = $this->prophesize(UserRepository::class);
         $userRepositoryProphecy
